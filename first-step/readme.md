@@ -1,4 +1,5 @@
 # First version of My Flask App
+This app uses hashed passwords.
 
 ## Prerequisites
 To run this app succeessfully you need these things:
