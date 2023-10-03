@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="wrapper">
+      <div class="title">Welcome Back</div>
+      
+      <form method="POST" action="/login">
+         <div class="field">
+            <input type="text" name="username" required>
+            <label>Username</label>
+         </div>
+         <div class="field">
+            <input type="password" name="password" required>
+            <label>Password</label>
+         </div>
+         <div class="content">
+            <div class="pass-link">
+               <a href="forgot_password">Forgot password?</a>
+            </div>
+         </div>
+         <div class="field">
+            <input type="submit" value="Login">
+         </div>
+         <div class="signup-link">
+            Don't have an account? <a href="register">Sign up now!</a>
+         </div>
+      </form>
+   </div>
+{% endblock %}
+   
+   
