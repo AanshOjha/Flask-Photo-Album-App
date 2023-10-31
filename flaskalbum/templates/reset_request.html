@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="wrapper">
+    <div class="title">Reset Password</div>
+        <form method="POST" action="/reset_password">
+            
+            <div class="field">
+                <input type="text" name="email" required>
+                <label>Email Address</label>
+            </div>
+            <div class="field">
+                <input type="submit" value="Send Email">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
