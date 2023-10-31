@@ -1,10 +1,10 @@
-import datetime
+from datetime import datetime, timedelta
 from flaskalbum import mysql, bcrypt, app
 import jwt
 from jwt import encode, decode
 
 class User:
-    def register_user(name, email, username, password):
+    def register_user(self, name, email, username, password):
         cursor = mysql.connection.cursor()
 
         # Check if the username or email already exists in the database
@@ -29,14 +29,14 @@ class User:
 
             return 'Account created successfully. You can now log in.'
 
-    def get_reset_token(self, expires_sec=1800):
+    def get_reset_token(self, expires_sec=600):
         # Generates a JWT token with an expiration time.
         payload = {
             "email": self.email,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=expires_sec)
+            "expiration": str(datetime.utcnow() + timedelta(seconds=expires_sec))
         }
 
-        token = jwt.encode(payload, app.config["SECRET_KEY"], algorithm="HS256")
+        token = jwt.encode(payload, app.config["SECRET_KEY"])
         return token
 
         
@@ -46,6 +46,11 @@ class User:
         try:
             payload = jwt.decode(token, '5791628bb0b13ce0c676dfde280ba245', algorithms=['HS256'])
             email = payload['email']
+            expiration = datetime.strptime(payload['expiration'], '%Y-%m-%d %H:%M:%S.%f')
+            
+            if expiration < datetime.utcnow():
+                return None
+            
             return email
             
         except jwt.ExpiredSignatureError:

@@ -61,11 +61,12 @@ def send_reset_email(user):
     token = user.get_reset_token()
     email_user = "aanshojha@zohomail.in"
     email_pwd = "Chalhatt@109"
-    TO = 'its.aanshojha@gmail.com'
+    TO = [user.email]
     SUBJECT = "Password Reset Request"
     TEXT = f'''To reset your password, visit the following link:
     {url_for('reset_token', token=token, _external=True)}
     
+    This link is valid for 10 minutes.
     If you did not make this request then simply ignore this email and no changes will be made.
     '''
     server = smtplib.SMTP('smtp.zoho.in', 587)
@@ -106,15 +107,23 @@ def reset_request():
 
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
-    if request.method == 'POST':
-      
-        user = User.verify_reset_token(token)
 
-        email = User.verify_reset_token(token)
-        
-        if not user:
+    # Verify the reset token
+    user = User.verify_reset_token(token)
+    
+    # Check if the token is invalid or expired
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect('/')
+    
+
+    if request.method == 'POST':
+
+        email = user
+
+        if user is None:
             flash('That is an invalid or expired token', 'warning')
-            return redirect('/reset_request')
+            return redirect('/')
 
         password = request.form['password']
 
