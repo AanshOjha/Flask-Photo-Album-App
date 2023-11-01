@@ -1,20 +1,43 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap');
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
 
-html,body{
-  display: grid;  
+html, body {
+  display: grid;
   height: 100%;
   width: 100%;
   place-items: center;
   background: linear-gradient(-45deg, #ee7752, #59046e, #0b6a8d, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 10s ease infinite;
+}
+
+/* Add a media query for smaller screens (e.g., mobile devices) */
+@media (max-width: 720px) {
+  .wrapper {
+    width: calc(100% - 48px); /* Adjust the width for smaller screens */
+  }
+
+  .wrapper .title {
+    font-size: 30px; /* Decrease font size for smaller screens */
+    line-height: 80px; /* Adjust line height for smaller screens */
+  }
+
+  .wrapper form {
+    padding: 10px 20px 30px 20px; /* Adjust padding for smaller screens */
+  }
+
+  .wrapper form .field input,
+  form .field label {
+    font-size: 15px; /* Decrease font size for input fields and labels */
+  }
+
+  /* Add more responsive styles as needed */
 }
 
 @keyframes gradient {
@@ -29,26 +52,31 @@ html,body{
   }
 }
 
+@media (min-width: 721px) {
+  .wrapper {
+    width: calc((100% - 48px) / 2);
+  }
+}
+
 ::selection{
   background: #4158d0;
   color: #fff;
 }
 
 .wrapper{
-  width: 400px;
   background: #fff;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.354);
 }
 
 .wrapper .title{
   font-size: 35px;
-  font-weight: bolder;
+  font-weight: bold;
   text-align: center;
   line-height: 100px;
   color: #fff;
   user-select: none;
-  border-radius: 15px 15px 0 0;
+  border-radius: 10px 10px 0 0;
   background: linear-gradient(-45deg, #ee7752, #59046e, #2192bc, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 10s ease infinite;
@@ -68,6 +96,10 @@ html,body{
   padding: 10px 30px 50px 30px;
 }
 
+.info input {
+  border-radius: 10px;
+}
+
 .wrapper form .field{
   height: 50px;
   width: 100%;
@@ -82,7 +114,7 @@ html,body{
   font-size: 17px;
   padding-left: 20px;
   border: 1px solid lightgrey;
-  border-radius: 25px;
+  border-radius: 10px;
   transition: all 0.3s ease;
 }
 

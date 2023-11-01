@@ -4,14 +4,14 @@
       <div class="title">Welcome Back</div>
       
       <form method="POST" action="/login">
-         <div class="field">
-            <input type="text" name="username" required>
-            <label>Username</label>
-         </div>
-         <div class="field">
-            <input type="password" name="password" required>
-            <label>Password</label>
-         </div>
+         <div class="form-floating mb-3 info">
+            <input type="text" class="form-control" name="username" id="floatingInput" placeholder="username" required>
+            <label for="floatingInput">Username</label>
+          </div>
+          <div class="form-floating info">
+            <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password" required>
+            <label for="floatingPassword">Password</label>
+          </div>
          <div class="content">
             <div class="pass-link">
                <a href="reset_password">Forgot password?</a>

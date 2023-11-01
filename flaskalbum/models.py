@@ -4,6 +4,7 @@ import jwt
 from jwt import encode, decode
 
 class User:
+    # Method to register a new user in the database
     def register_user(self, name, email, username, password):
         cursor = mysql.connection.cursor()
 
@@ -29,6 +30,7 @@ class User:
 
             return 'Account created successfully. You can now log in.'
 
+    # Method to generate a JWT token with an expiration time
     def get_reset_token(self, expires_sec=600):
         # Generates a JWT token with an expiration time.
         payload = {
@@ -39,15 +41,16 @@ class User:
         token = jwt.encode(payload, app.config["SECRET_KEY"])
         return token
 
-        
-
+    # Static method to verify the validity of a reset token
     @staticmethod
     def verify_reset_token(token):
         try:
-            payload = jwt.decode(token, '5791628bb0b13ce0c676dfde280ba245', algorithms=['HS256'])
+            # Decode the token and extract email and expiration time
+            payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
             email = payload['email']
             expiration = datetime.strptime(payload['expiration'], '%Y-%m-%d %H:%M:%S.%f')
             
+            # Check if the token has expired
             if expiration < datetime.utcnow():
                 return None
             
@@ -60,5 +63,6 @@ class User:
             # Handle invalid token
             return None
         
+    # Representation of User object for debugging and logging
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.password}', '{self.name}')"
