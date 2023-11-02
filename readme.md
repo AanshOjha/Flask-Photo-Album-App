@@ -44,7 +44,7 @@ should be done. Otherwise use global variables or other options.
 
 
 ## Hosting in Ubuntu VM
-1. Git clone this reposoitory.
+1. Git clone this repository.
 2. Go to the folder
 3. Create virtual environment
    ```sh
@@ -76,7 +76,7 @@ EXIT;
 ```sh
 mysql -u root -p
 ```
-Don't forget to exit; MySQL :)
+Don't forget to `exit;` MySQL :)
 
 
 
