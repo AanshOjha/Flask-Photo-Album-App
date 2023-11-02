@@ -15,4 +15,3 @@ app.config['MYSQL_DB'] = 'credentials'
 mysql = MySQL(app)
 
 from flaskalbum import routes
-
