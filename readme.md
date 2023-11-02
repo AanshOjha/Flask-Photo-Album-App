@@ -78,7 +78,7 @@ mysql -u root -p
 ```
 Don't forget to `exit;` MySQL :)
 
-8. Configure OS environment variables `EMAIL_ID` and `EMAIL_PASS` which are used to send emails of resetting password.
+8. Configure [OS environment variables](#using-os-environment-variables) `EMAIL_ID` and `EMAIL_PASS` which are used to send emails of resetting password.
 
 9. Configure nginx
 ```
