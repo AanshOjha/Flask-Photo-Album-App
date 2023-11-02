@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Modules Required](requirements.txt)
 2. [Using OS Environment Variables](#using-os-environment-variables)
-3. [MySQL Connection](#mysql-connection)
+3. [MySQL Connection](mysql-config.py)
 
 
 ## Using OS Environment Variables
@@ -42,4 +42,3 @@ In the same terminal, same directory, same terminal session,
 should be done. Otherwise use global variables or other options.
 
 
-## MySQL Connection
