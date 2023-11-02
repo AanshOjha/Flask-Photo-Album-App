@@ -115,9 +115,9 @@ def reset_request():
             user_email = cursor.fetchone()
 
             # If no user found with the provided email, display a warning message
-            if not user_email:
+            if user_email is None:
                 flash('No user found with that email address.', 'warning')
-                return redirect('/reset_request')
+                return redirect('/reset_password')
 
             # Create a User object and send the password reset email
             user = User()
