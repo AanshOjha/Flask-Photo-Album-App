@@ -103,6 +103,10 @@ server {
 }
 ```
 Ctrl+X, Y, Enter
+```
+sudo nginx -t
+sudo service nginx restart
+```
 I don't know why but port 5000 don't work <3!
 
 10. Little change in run.py:
