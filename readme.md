@@ -21,9 +21,7 @@ else:
 
 ```
 
-<div style="border: 1px solid #ffc107; text-align:center; padding: 10px; border-radius: 5px; font-size:20px;">
-⚠️ Warning
-</div>
+### ⚠️ Warning
 
 In the same terminal, same directory, same terminal session,
 1. environment variable declaration,
