@@ -42,6 +42,10 @@ In the same terminal, same directory, same terminal session,
 
 should be done. Otherwise use global variables or other options.
 
+### ⚠️ **Warning**
+Don't know why but Flask-MySQLdb module does not installs in VM without virtual environment. 
+Take care! This has taken my hours of sleep 🥲
+
 
 ## Hosting in Ubuntu VM
 1. Git clone this repository.
