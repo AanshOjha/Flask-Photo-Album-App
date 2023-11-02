@@ -84,6 +84,39 @@ Don't forget to `exit;` MySQL :)
 ```
 sudo apt install nginx
 ```
+```
+sudo nano /etc/nginx/sites-available/default
+```
+Enter this code here:
+```
+server {
+    listen 80;
+    server_name your_domain_or_ip;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+Ctrl+X, Y, Enter
+I don't know why but port 5000 don't work <3!
+
+10. Little change in run.py:
+```
+from flaskalbum import app
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8080)
+```
+
+### Now run the run.py file...
+### Hopefully your website will be visible in your VM's public ip address.
+
+Lots Of Efforts from my side 💖 🥵
 
 
 
