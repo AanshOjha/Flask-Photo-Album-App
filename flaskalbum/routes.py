@@ -41,7 +41,7 @@ def login():
 
         # Retrieve user data from the database and validate login credentials
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT username, password FROM creds WHERE username = %s", (username,))
+        cursor.execute("SELECT username, password FROM creds WHERE username = %s OR email = %s", (username, username))
         user_row = cursor.fetchone()
 
         # Check if the user exists and the password is correct
