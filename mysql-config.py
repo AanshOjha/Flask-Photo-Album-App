@@ -11,13 +11,13 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 # Create a database named 'mydatabase'
-mycursor.execute("CREATE DATABASE IF NOT EXISTS users_db")
+mycursor.execute("CREATE DATABASE IF NOT EXISTS credentials")
 
 # Switch to the 'mydatabase' database
-mycursor.execute("USE users_db")
+mycursor.execute("USE credentials")
 
 # Create a table 'customers' with columns 'name' and 'address'
-mycursor.execute("CREATE TABLE IF NOT EXISTS user_credentials (name VARCHAR(120), email VARCHAR(120), username VARCHAR(120), password VARCHAR(120))")
+mycursor.execute("CREATE TABLE IF NOT EXISTS creds (name VARCHAR(120), email VARCHAR(120), username VARCHAR(120), password VARCHAR(120))")
 
 # Close the cursor and connection
 mycursor.close()
