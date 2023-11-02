@@ -4,7 +4,7 @@
 1. [Modules Required](requirements.txt)
 2. [Using OS Environment Variables](#using-os-environment-variables)
 3. [MySQL Connection](mysql-config.py)
-4. [Hosting in Ubuntu VM](hosting-in-ubuntu-vm)
+4. [Hosting in Ubuntu VM](#hosting-in-ubuntu-vm)
 
 
 ## Using OS Environment Variables
