@@ -1,3 +1,4 @@
+import os
 import smtplib
 from flask import render_template, request, url_for, redirect, session, flash
 from flaskalbum import app, bcrypt, mysql
@@ -77,8 +78,12 @@ def send_reset_email(user):
     # Generate a password reset token and construct the reset email content
     token = user.get_reset_token()
     # Email configuration and content
-    email_user = "aanshojha@zohomail.in"
-    email_pwd = "Chalhatt@109"
+    # ---------------------------------NOT SO SECURE IF YOU HARDCODE -----------------------------------------------------
+    # email_user = "aanshojha@zohomail.in"
+    email_user = os.environ.get('EMAIL_ID')
+    # email_pwd = "Chalhatt@109"
+    email_pwd = os.environ.get('EMAIL_PASS')
+    # ----------------------------------------------------------------------------------
     TO = [user.email]
     SUBJECT = "Password Reset Request"
     TEXT = f'''To reset your password, visit the following link:
