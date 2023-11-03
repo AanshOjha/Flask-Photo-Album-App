@@ -12,10 +12,10 @@
 I have used OS Environment Variables in many places like, specifying email, password, MySQL connection variables, etc.
 
 To use OS Environment Variables,
-
-1. Create a file named ".env" in root directory.
-2. Declare all variables related to email and MySQL.
-3. Now run envconfig.py to declare the OS Environment Variables.
+1. Install and import `python-dotenv` module.
+2. Create a file named ".env" in root directory.
+3. Declare all variables related to email and MySQL.
+4. Now run envconfig.py to declare the OS Environment Variables.
 
 > Advantage of doing this- If you wish to change the name of DB, table, email, etc anything, only change the name in ".env" file!
 >> Note: If you change MYSQL_DB or MYSQL_TABLE, you have to run mysql-config.py again.
