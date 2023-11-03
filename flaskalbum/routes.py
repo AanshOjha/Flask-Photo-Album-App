@@ -84,12 +84,17 @@ def send_reset_email(user):
 
     TO = [user.email]
     SUBJECT = "Password Reset Request"
-    TEXT = f'''To reset your password, visit the following link:
-    {url_for('reset_token', token=token, _external=True)}
-    
-    This link is valid for 10 minutes.
-    If you did not make this request then simply ignore this email and no changes will be made.
-    '''
+    TEXT = f'''
+To reset your password, visit the following link:
+
+{url_for('reset_token', token=token, _external=True)}
+
+This link is valid for 10 minutes.
+If you did not make this request, then simply ignore this email and no changes will be made.
+
+Regards
+Aansh Ojha
+'''
     server = smtplib.SMTP('smtp.zoho.in', 587)
     server.ehlo()
     server.starttls()
