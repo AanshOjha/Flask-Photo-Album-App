@@ -3,6 +3,7 @@ import smtplib
 from flask import render_template, request, url_for, redirect, session, flash
 from flaskalbum import app, bcrypt, mysql
 from flaskalbum.models import User
+from envconfig import EMAIL_ID, EMAIL_PASS, MYSQL_TABLE
 
 # Create an instance of the User class from models.py
 user = User()
@@ -41,7 +42,7 @@ def login():
 
         # Retrieve user data from the database and validate login credentials
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT username, password FROM creds WHERE username = %s OR email = %s", (username, username))
+        cursor.execute(f"SELECT username, password FROM {MYSQL_TABLE} WHERE username = %s OR email = %s", (username, username))
         user_row = cursor.fetchone()
 
         # Check if the user exists and the password is correct
@@ -79,8 +80,8 @@ def send_reset_email(user):
     token = user.get_reset_token()
     
     # Email configuration and content
-    email_user = os.environ.get('EMAIL_ID')
-    email_pwd = os.environ.get('EMAIL_PASS')
+    email_user = EMAIL_ID
+    email_pwd = EMAIL_PASS
 
     TO = [user.email]
     SUBJECT = "Password Reset Request"
@@ -91,7 +92,7 @@ To reset your password, visit the following link:
 
 This link is valid for 10 minutes.
 If you did not make this request, then simply ignore this email and no changes will be made.
- 
+
 Regards
 Aansh Ojha
 '''
@@ -116,7 +117,7 @@ def reset_request():
             cursor = mysql.connection.cursor()
 
             # Check if the provided email address exists in the database
-            cursor.execute("SELECT email FROM creds WHERE email = %s", (email,))
+            cursor.execute(f"SELECT email FROM {MYSQL_TABLE} WHERE email = %s", (email,))
             user_email = cursor.fetchone()
 
             # If no user found with the provided email, display a warning message
@@ -156,7 +157,7 @@ def reset_token(token):
         if password:
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
             cursor = mysql.connection.cursor()
-            cursor.execute("UPDATE creds SET password = %s WHERE email = %s", (hashed_password, email))
+            cursor.execute(f"UPDATE {MYSQL_TABLE} SET password = %s WHERE email = %s", (hashed_password, email))
             mysql.connection.commit()
 
             # Display a success message and redirect to the login page

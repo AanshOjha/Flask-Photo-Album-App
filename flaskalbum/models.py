@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from flaskalbum import mysql, bcrypt, app
 import jwt
 from jwt import encode, decode
+from envconfig import MYSQL_TABLE
+
 
 class User:
     # Method to register a new user in the database
@@ -9,9 +11,9 @@ class User:
         cursor = mysql.connection.cursor()
 
         # Check if the username or email already exists in the database
-        cursor.execute("SELECT * FROM creds WHERE username = %s", (username,))
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE username = %s", (username,))
         user_with_username = cursor.fetchone()
-        cursor.execute("SELECT * FROM creds WHERE email = %s", (email,))
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE email = %s", (email,))
         user_with_email = cursor.fetchone()
 
         if user_with_username:
@@ -23,7 +25,7 @@ class User:
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
             # Insert the user data into the database
-            cursor.execute("INSERT INTO creds (name, email, username, password) VALUES (%s, %s, %s, %s)",
+            cursor.execute(f"INSERT INTO {MYSQL_TABLE} (name, email, username, password) VALUES (%s, %s, %s, %s)",
                            (name, email, username, hashed_password))
             mysql.connection.commit()
             cursor.close() 
