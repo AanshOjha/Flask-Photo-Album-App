@@ -1,9 +1,8 @@
-import os
-import smtplib
-from flask import render_template, request, url_for, redirect, session, flash
+from flask import render_template, request, redirect, session, flash
 from flaskalbum import app, bcrypt, mysql
 from flaskalbum.models import User
-from envconfig import EMAIL_ID, EMAIL_PASS, MYSQL_TABLE
+from envconfig import MYSQL_TABLE
+from flaskalbum.utils import send_reset_email
 
 # Create an instance of the User class from models.py
 user = User()
@@ -40,15 +39,12 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        # Retrieve user data from the database and validate login credentials
-        cursor = mysql.connection.cursor()
-        cursor.execute(f"SELECT username, password FROM {MYSQL_TABLE} WHERE username = %s OR email = %s", (username, username))
-        user_row = cursor.fetchone()
+        authenticated_user = user.authenticate_user(username, password)
 
         # Check if the user exists and the password is correct
-        if user_row and bcrypt.check_password_hash(user_row[1], password):
+        if authenticated_user:
             # Store the username in the session and redirect to the home page
-            session['username'] = user_row[0]
+            session['username'] = authenticated_user
             return redirect('/home')
         else:
             # Display an error message for unsuccessful login attempts
@@ -74,60 +70,21 @@ def logout():
     session.pop('username', None)
     return redirect('/')
 
-# Function to send a password reset email to the user
-def send_reset_email(user):
-    # Generate a password reset token and construct the reset email content
-    token = user.get_reset_token()
-    
-    # Email configuration and content
-    email_user = EMAIL_ID
-    email_pwd = EMAIL_PASS
-
-    TO = [user.email]
-    SUBJECT = "Password Reset Request"
-    TEXT = f'''
-To reset your password, visit the following link:
-
-{url_for('reset_token', token=token, _external=True)}
-
-This link is valid for 10 minutes.
-If you did not make this request, then simply ignore this email and no changes will be made.
-
-Regards
-Aansh Ojha
-'''
-    server = smtplib.SMTP('smtp.zoho.in', 587)
-    server.ehlo()
-    server.starttls()
-    server.login(email_user, email_pwd)
-    BODY = '\r\n'.join(['To: %s' % TO,
-            'From: %s' % email_user,
-            'Subject: %s' % SUBJECT,
-            '', TEXT])
-    
-    # Send the email using SMTP
-    server.sendmail(email_user, [TO], BODY)
-
 # Route for initiating a password reset request
 @app.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if request.method == 'POST':
         email = request.form['email']
         if email:
-            cursor = mysql.connection.cursor()
-
-            # Check if the provided email address exists in the database
-            cursor.execute(f"SELECT email FROM {MYSQL_TABLE} WHERE email = %s", (email,))
-            user_email = cursor.fetchone()
+            user_data = user.get_user_by_email(email)
 
             # If no user found with the provided email, display a warning message
-            if user_email is None:
+            if user_data is None:
                 flash('No user found with that email address.', 'warning')
                 return redirect('/reset_password')
 
-            # Create a User object and send the password reset email
-            user = User()
-            user.email = user_email[0]
+            # Send the password reset email
+            user.email = user_data[1]
             send_reset_email(user)
 
             # Display a success message and redirect to the login page
@@ -141,24 +98,19 @@ def reset_request():
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
     # Verify the reset token
-    user = User.verify_reset_token(token)
+    email_from_token = user.verify_reset_token(token)
     
     # Check if the token is invalid or expired
-    if user is None:
+    if email_from_token is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect('/')
     
     # Handle POST request for password reset
     if request.method == 'POST':
-        email = user
-
         # Retrieve and update the user's password
         password = request.form['password']
         if password:
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            cursor = mysql.connection.cursor()
-            cursor.execute(f"UPDATE {MYSQL_TABLE} SET password = %s WHERE email = %s", (hashed_password, email))
-            mysql.connection.commit()
+            user.update_password(email_from_token, password)
 
             # Display a success message and redirect to the login page
             flash('Your password has been updated! You are now able to log in', 'success')

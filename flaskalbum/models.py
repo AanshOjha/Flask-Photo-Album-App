@@ -31,6 +31,18 @@ class User:
             cursor.close() 
 
             return 'Account created successfully. You can now log in.'
+        
+    # Method for login attempt by user    
+    def authenticate_user(self, username, password):
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"SELECT username, password FROM {MYSQL_TABLE} WHERE username = %s OR email = %s", (username, username))
+        user_row = cursor.fetchone()
+        cursor.close()
+    
+        if user_row and bcrypt.check_password_hash(user_row[1], password):
+            return user_row[0]
+        else:
+            return None
 
     # Method to generate a JWT token with an expiration time
     def get_reset_token(self, expires_sec=600):
@@ -43,7 +55,7 @@ class User:
         token = jwt.encode(payload, app.config["SECRET_KEY"])
         return token
 
-    # Static method to verify the validity of a reset token
+    # Static method to verify the validity of a reset token and if valid, return email from it
     @staticmethod
     def verify_reset_token(token):
         try:
@@ -64,6 +76,24 @@ class User:
         except jwt.InvalidTokenError:
             # Handle invalid token
             return None
+        
+    # Static method returning user data from email entered in reset password
+    @staticmethod
+    def get_user_by_email(email):
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE email = %s", (email,))
+        user_data = cursor.fetchone()
+        cursor.close()
+        return user_data
+
+    # Static method to update password by taking email and password
+    @staticmethod
+    def update_password(email, password):
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"UPDATE {MYSQL_TABLE} SET password = %s WHERE email = %s", (hashed_password, email))
+        mysql.connection.commit()
+        cursor.close()
         
     # Representation of User object for debugging and logging
     def __repr__(self):
