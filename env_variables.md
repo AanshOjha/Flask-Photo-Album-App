@@ -1,5 +1,7 @@
 # About Environment Variables (For New people)
 
+This is not related to my project, but I got to know about this so writing here :)
+
 ## Using OS Environment Variables
 
 To use OS Environment Variables,
