@@ -91,7 +91,7 @@ To reset your password, visit the following link:
 
 This link is valid for 10 minutes.
 If you did not make this request, then simply ignore this email and no changes will be made.
-
+ 
 Regards
 Aansh Ojha
 '''
