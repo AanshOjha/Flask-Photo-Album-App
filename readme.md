@@ -12,35 +12,13 @@
 I have used OS Environment Variables in many places like, specifying email, password, MySQL connection variables, etc.
 
 To use OS Environment Variables,
+1. Install and import `python-dotenv` module.
+2. Create a file named ".env" in root directory.
+3. Declare all variables related to email and MySQL.
+4. Now run envconfig.py to declare the OS Environment Variables.
 
-1. For Windows Powershell,
-`$env:EMAIL_ID = "aanshojha@zohomail.in"`
-
-2. For Bash,
-`export EMAIL="aanshojha@zohomail.in"`
-
-3. Python code to test:
-```py
-import os
-
-# Get the value of the environment variable 'EMAIL'
-email_value = os.environ.get('EMAIL')
-
-# Check if the variable is set
-if email_value is not None:
-    print(f"The value of the environment variable 'EMAIL' is: {email_value}")
-else:
-    print("The environment variable 'EMAIL' is not set.")
-
-```
-
-### ⚠️ **Warning**
-
-In the same terminal, same directory, same terminal session,
-1. environment variable declaration,
-2. running of python file
-
-should be done. Otherwise use global variables or other options.
+> Advantage of doing this- If you wish to change the name of DB, table, email, etc anything, only change the name in ".env" file!
+>> Note: If you change MYSQL_DB or MYSQL_TABLE, you have to run mysql-config.py again.
 
 ### ⚠️ **Warning**
 Don't know why but Flask-MySQLdb module does not installs in VM without virtual environment. 
@@ -125,8 +103,3 @@ if __name__ == '__main__':
 ### Hopefully your website will be visible in your VM's public ip address.
 
 Lots Of Efforts from my side 💖 🥵
-
-
-
-
-
