@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, session, flash
-from flaskalbum import app, bcrypt, mysql
+from flaskalbum import app
 from flaskalbum.models import User
-from envconfig import MYSQL_TABLE
 from flaskalbum.utils import send_reset_email
 
 # Create an instance of the User class from models.py
@@ -118,3 +117,7 @@ def reset_token(token):
     
     # Render the password reset form for GET requests
     return render_template('reset_token.html', title='Reset Password')
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
