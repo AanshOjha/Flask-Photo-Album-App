@@ -9,7 +9,7 @@ user = User()
 # Route for the home page (login page)
 @app.route('/')
 def index(): 
-    return render_template('login.html')
+    return render_template('login.html', title='Login')
 
 # Route for user registration
 @app.route('/register', methods=['GET', 'POST'])
@@ -28,7 +28,7 @@ def register():
             return redirect('/')
 
     # Render the registration form for GET requests
-    return render_template('register.html')
+    return render_template('register.html', title='Create Account')
 
 # Route for user login
 @app.route('/login', methods=['GET','POST'])
@@ -58,7 +58,7 @@ def login():
 def home():
     # Check if the user is logged in, if not, redirect to the login page
     if 'username' in session:
-        return render_template('home.html')
+        return render_template('home.html', title='Home')
     else:
         return redirect('/')
 
@@ -91,7 +91,7 @@ def reset_request():
             return redirect('/login')
         
     # Render the password reset request form for GET requests
-    return render_template('reset_request.html', title='Reset Password')
+    return render_template('reset_request.html', title='Forgot Password')
 
 # Route for handling password reset with the provided token
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
