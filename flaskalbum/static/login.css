@@ -18,6 +18,13 @@ html, body {
   animation: gradient 10s ease infinite;
 }
 
+.alerts {
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto !important;
+  width: 100%;
+}
+
 @media (max-width: 720px) {
   .wrapper {
     width: calc(100% - 48px); 

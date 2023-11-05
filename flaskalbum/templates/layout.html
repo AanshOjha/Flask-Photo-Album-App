@@ -14,17 +14,27 @@
 {% endif %}
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
-    
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-          <script>
-            alert('{{ message|safe }}')
-          </script>
-        {% endfor %}
+    <div class="wrapper">
+    {% if title %}
+        <div class="title">{{ title }}</div>
+    {% else %}
+        <div class="title">Photo Album</div>
     {% endif %}
-    {% endwith %}
+
+    <div class="col-md-8 alerts">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+    </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+    
 </body>
 </html>

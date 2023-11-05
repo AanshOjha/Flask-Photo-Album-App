@@ -4,7 +4,6 @@ import jwt
 from jwt import encode, decode
 from envconfig import MYSQL_TABLE
 
-
 class User:
     # Method to register a new user in the database
     def register_user(self, name, email, username, password):

@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, session, flash
-from flaskalbum import app, bcrypt, mysql
+from flaskalbum import app
 from flaskalbum.models import User
-from envconfig import MYSQL_TABLE
 from flaskalbum.utils import send_reset_email
 
 # Create an instance of the User class from models.py
@@ -10,7 +9,7 @@ user = User()
 # Route for the home page (login page)
 @app.route('/')
 def index(): 
-    return render_template('login.html')
+    return render_template('login.html', title='Login')
 
 # Route for user registration
 @app.route('/register', methods=['GET', 'POST'])
@@ -29,7 +28,7 @@ def register():
             return redirect('/')
 
     # Render the registration form for GET requests
-    return render_template('register.html')
+    return render_template('register.html', title='Create Account')
 
 # Route for user login
 @app.route('/login', methods=['GET','POST'])
@@ -59,7 +58,7 @@ def login():
 def home():
     # Check if the user is logged in, if not, redirect to the login page
     if 'username' in session:
-        return render_template('home.html')
+        return render_template('home.html', title='Home')
     else:
         return redirect('/')
 
@@ -92,7 +91,7 @@ def reset_request():
             return redirect('/login')
         
     # Render the password reset request form for GET requests
-    return render_template('reset_request.html', title='Reset Password')
+    return render_template('reset_request.html', title='Forgot Password')
 
 # Route for handling password reset with the provided token
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
@@ -118,3 +117,7 @@ def reset_token(token):
     
     # Render the password reset form for GET requests
     return render_template('reset_token.html', title='Reset Password')
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
