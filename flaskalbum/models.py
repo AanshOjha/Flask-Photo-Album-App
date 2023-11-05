@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from flaskalbum import mysql, bcrypt, app
 import jwt
 from jwt import encode, decode
+from envconfig import MYSQL_TABLE
+
 
 class User:
     # Method to register a new user in the database
@@ -9,9 +11,9 @@ class User:
         cursor = mysql.connection.cursor()
 
         # Check if the username or email already exists in the database
-        cursor.execute("SELECT * FROM creds WHERE username = %s", (username,))
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE username = %s", (username,))
         user_with_username = cursor.fetchone()
-        cursor.execute("SELECT * FROM creds WHERE email = %s", (email,))
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE email = %s", (email,))
         user_with_email = cursor.fetchone()
 
         if user_with_username:
@@ -23,12 +25,24 @@ class User:
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
             # Insert the user data into the database
-            cursor.execute("INSERT INTO creds (name, email, username, password) VALUES (%s, %s, %s, %s)",
+            cursor.execute(f"INSERT INTO {MYSQL_TABLE} (name, email, username, password) VALUES (%s, %s, %s, %s)",
                            (name, email, username, hashed_password))
             mysql.connection.commit()
             cursor.close() 
 
             return 'Account created successfully. You can now log in.'
+        
+    # Method for login attempt by user    
+    def authenticate_user(self, username, password):
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"SELECT username, password FROM {MYSQL_TABLE} WHERE username = %s OR email = %s", (username, username))
+        user_row = cursor.fetchone()
+        cursor.close()
+    
+        if user_row and bcrypt.check_password_hash(user_row[1], password):
+            return user_row[0]
+        else:
+            return None
 
     # Method to generate a JWT token with an expiration time
     def get_reset_token(self, expires_sec=600):
@@ -41,7 +55,7 @@ class User:
         token = jwt.encode(payload, app.config["SECRET_KEY"])
         return token
 
-    # Static method to verify the validity of a reset token
+    # Static method to verify the validity of a reset token and if valid, return email from it
     @staticmethod
     def verify_reset_token(token):
         try:
@@ -62,6 +76,24 @@ class User:
         except jwt.InvalidTokenError:
             # Handle invalid token
             return None
+        
+    # Static method returning user data from email entered in reset password
+    @staticmethod
+    def get_user_by_email(email):
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"SELECT * FROM {MYSQL_TABLE} WHERE email = %s", (email,))
+        user_data = cursor.fetchone()
+        cursor.close()
+        return user_data
+
+    # Static method to update password by taking email and password
+    @staticmethod
+    def update_password(email, password):
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        cursor = mysql.connection.cursor()
+        cursor.execute(f"UPDATE {MYSQL_TABLE} SET password = %s WHERE email = %s", (hashed_password, email))
+        mysql.connection.commit()
+        cursor.close()
         
     # Representation of User object for debugging and logging
     def __repr__(self):
