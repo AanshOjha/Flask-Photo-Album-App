@@ -1,3 +1,4 @@
+#import app
 from flaskalbum import app
 
 if __name__ == '__main__':
