@@ -1,5 +1,6 @@
 __pycache__
 
+
 # Ignore compiled Python files inside flaskalbum directory
 flaskalbum/__pycache__
 
